@@ -1,0 +1,65 @@
+<title>Family Duel</title>
+<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.33.1.min.js"></script>
+<script>
+  console.log('script loaded');
+
+  const uuid = () => {
+    const uuid = new Uint32Array(3);
+    crypto.getRandomValues(uuid);
+    return uuid.join('');
+  }
+
+  class Viewer {
+    constructor(playerId) {
+      this.playerId = playerId;
+      this.pubnub = new PubNub({
+        publishKey: "pub-c-c20b0062-2fab-478d-b3a0-df24b3ad656f",
+        subscribeKey: "sub-c-e4bd8c4a-3e23-11ec-b2c1-a25c7fcd9558",
+        uuid: this.playerId
+      });
+    }
+
+    statusChanged(event) {
+      console.log('statusChanged', event);
+      // if (event.category === "PNConnectedCategory") {
+      // }
+    }
+
+    messageReceived(message) {
+      console.log('messageReceived', message);
+    }
+
+    presenceChanged(event) {
+      console.log('presenceChanged', event);
+    }
+
+    start() {
+      this.pubnub.addListener({
+        status: this.statusChanged,
+        message: this.messageReceived,
+        presence: this.presenceChanged
+      }).subscribe({ channels: [this.gameCode] });
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    console.log('dom content loaded');
+    document.getElementById('form-join').addEventListener('submit', e => {
+      e.preventDefault();
+      const sessionId = document.querySelector('input[name=sessionId]').value;
+      console.log('sessionId', sessionId);
+    })
+    // const viewer = new Viewer(uuid(), uuid());
+    // viewer.start();
+  });
+</script>
+
+<h1>Viewer</h1>
+
+<form id="form-join">
+  <label>
+    Code
+    <input type="text" name="sessionId" placeholder="Enter the game code..." autofocus autocomplete="off" autocapitalize="off"/>
+  </label>
+  <button type="submit">Join</button>
+</form>
