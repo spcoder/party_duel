@@ -1,0 +1,58 @@
+<template id="menuView">
+  <div id="actions">
+    <h1>Menu</h1>
+    <button name="new">New Game</button>
+    <button name="continue">Continue Game</button>
+    <button name="exit">Exit</button>
+  </div>
+  <div id="newGameConfirmation">
+    <h1>New game?</h1>
+    <p>By starting a new game you'll lose all progress for your previous game. Are you sure you want to continue?</p>
+    <button name="yes">Yes, start a new game</button>
+    <button name="no">No, keep my existing game</button>
+  </div>
+</template>
+
+<script>
+  app.addView({
+    templateId: 'menuView',
+    created: function(el) {
+      const resetState = () => Object.keys(this.state).forEach(k => Reflect.set(this.state, k, Reflect.get(this.defaultState, k)));
+      el.getElementById('newGameConfirmation').style.display = 'none';
+      el.querySelector('button[name=yes]').addEventListener('click', e => {
+        e.preventDefault();
+        resetState();
+        this.nav('#board');
+      });
+      el.querySelector('button[name=no]').addEventListener('click', e => {
+        e.preventDefault();
+        el.getElementById('newGameConfirmation').style.display = 'none';
+        el.getElementById('actions').style.display = 'block';
+      });
+      el.querySelector('button[name=new]').addEventListener('click', e => {
+        e.preventDefault();
+        if (previousGameExists()) {
+          el.getElementById('actions').style.display = 'none';
+          el.getElementById('newGameConfirmation').style.display = 'block';
+        } else {
+          resetState();
+          this.nav('#board');
+        }
+      });
+      el.querySelector('button[name=continue]').addEventListener('click', e => {
+        e.preventDefault();
+        this.nav('#board');
+      });
+      el.querySelector('button[name=exit]').addEventListener('click', e => {
+        e.preventDefault();
+        this.nav('#start');
+      });
+    }
+  });
+</script>
+
+<style>
+  h1 {
+    color: green;
+  }
+</style>

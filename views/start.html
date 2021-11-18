@@ -1,0 +1,41 @@
+<template id="startView">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/reset.css">
+  <link rel="stylesheet" href="/index.css">
+  <h1>Party Duel</h1>
+  <h2>Some cool tagline</h2>
+  <p>Click to start</p>
+</template>
+
+<script>
+  app.addView({
+    templateId: 'startView',
+    created: function(el) {
+      el.addEventListener('click', () => this.nav('#menu'));
+    }
+  });
+</script>
+
+<style>
+  :host {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  :host > * {
+    font-family: 'Inter', monospace;
+  }
+
+  h1 {
+    font-size: 4rem;
+    color: green;
+  }
+</style>

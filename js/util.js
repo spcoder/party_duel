@@ -1,30 +1,3 @@
-const getReponseText = resp => resp.text();
-const textToDocument = html => new DOMParser().parseFromString(html, 'text/html');
-const documentToTemplate = doc => {
-  const templateNode = doc.querySelector('template');
-  const scriptNode = doc.querySelector('script');
-  if (scriptNode) {
-    const scriptEl = document.createElement('script');
-    const scriptText = document.createTextNode(scriptNode.innerText);
-    scriptEl.appendChild(scriptText);
-    return { templateNode, scriptEl };
-  }
-  return { templateNode, scriptEl: undefined };
-};
-const appendTemplate = ({ templateNode, scriptEl }) => {
-  document.body.appendChild(templateNode.cloneNode(true));
-  if (scriptEl) {
-    document.body.appendChild(scriptEl.cloneNode(true));
-  }
-};
-const includeHTML = file =>
-  fetch(file)
-    .then(getReponseText)
-    .then(textToDocument)
-    .then(documentToTemplate)
-    .then(appendTemplate);
-const includeTemplate = file => includeHTML(`tmpl/${file}`);
-
 const uuid = () => {
   const uuid = new Uint32Array(3);
   crypto.getRandomValues(uuid);
@@ -43,6 +16,8 @@ const generateJoinCode = () => {
   }
   return code;
 };
+
+const previousGameExists = () => !!localStorage.getItem('_joinCode');
 
 const saveData = (key, value) => localStorage.setItem(key, value);
 

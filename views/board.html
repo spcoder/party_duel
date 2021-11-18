@@ -1,0 +1,99 @@
+<!--suppress HtmlUnknownAnchorTarget -->
+<template id="boardView">
+  <h1>Board</h1>
+  <a href="#menu">Back</a>
+
+  <div id="joinCode"></div>
+
+  <a href="#teamName1Form">
+    <div id="teamName1"></div>
+  </a>
+  <a href="#teamScore1Form">
+    <div id="teamScore1"></div>
+  </a>
+
+  <a href="#teamName2Form">
+    <div id="teamName2"></div>
+  </a>
+  <a href="#teamScore2Form">
+    <div id="teamScore2"></div>
+  </a>
+
+  <div id="strikes"></div>
+  <button id="incrementStrikes">Add a strike</button>
+  <button id="decrementStrikes">Remove a strike</button>
+
+  <div id="question"></div>
+
+  <div id="answerText1"></div>
+  <button id="answerVisible1">{show/hide}</button>
+  <div id="answerScore1"></div>
+
+  <div id="answerText2"></div>
+  <button id="answerVisible2">{show/hide}</button>
+  <div id="answerScore2"></div>
+
+  <div id="answerText3"></div>
+  <button id="answerVisible3">{show/hide}</button>
+  <div id="answerScore3"></div>
+
+  <div id="answerText4"></div>
+  <button id="answerVisible4">{show/hide}</button>
+  <div id="answerScore4"></div>
+
+  <div id="answerText5"></div>
+  <button id="answerVisible5">{show/hide}</button>
+  <div id="answerScore5"></div>
+
+  <div id="answerText6"></div>
+  <button id="answerVisible6">{show/hide}</button>
+  <div id="answerScore6"></div>
+
+  <div id="answerText7"></div>
+  <button id="answerVisible7">{show/hide}</button>
+  <div id="answerScore7"></div>
+
+  <div id="answerText8"></div>
+  <button id="answerVisible8">{show/hide}</button>
+  <div id="answerScore8"></div>
+
+  <button id="show-questions-form">Questions &amp; Answers</button>
+</template>
+
+<script>
+  app.addView({
+    templateId: 'boardView',
+    created: function(el) {
+      el.querySelector('#joinCode').innerText = this.state._joinCode;
+      el.querySelector('#teamName1').innerText = this.state.teamName1;
+      el.querySelector('#teamScore1').innerText = this.state.teamScore1;
+      el.querySelector('#teamName2').innerText = this.state.teamName2;
+      el.querySelector('#teamScore2').innerText = this.state.teamScore2;
+      el.querySelector('#strikes').innerText = `Strikes: ${this.state.strikes}`;
+      el.querySelector('#question').innerText = this.state.question ?? 'No question';
+
+      el.querySelectorAll('[id^=answerText]').forEach((n, i) => {
+        n.innerText = Reflect.get(this.state, `answer${i + 1}Text`) ?? 'Empty answer';
+      });
+      el.querySelectorAll('[id^=answerScore]').forEach((n, i) => {
+        n.innerText = Reflect.get(this.state, `answer${i + 1}Score`) ?? 'Empty score';
+      });
+      el.querySelectorAll('[id^=answerVisible]').forEach((n, i) => {
+        n.innerText = (Reflect.get(this.state, `answer${i + 1}Visible`) ?? false) ? 'Hide' : 'Show';
+        n.addEventListener('click', () => {
+          this.setNav('visibilityConfirmationIndex', i + 1, '#toggleVisibleConfirmation');
+        });
+      });
+
+      el.querySelector('#show-questions-form').addEventListener('click', () => {
+        this.nav('#questionForm');
+      });
+      el.querySelector('#incrementStrikes').addEventListener('click', () => {
+        this.setNav('strikesModalDirection', 1, '#strikeConfirmation');
+      });
+      el.querySelector('#decrementStrikes').addEventListener('click', () => {
+        this.setNav('strikesModalDirection', -1, '#strikeConfirmation');
+      });
+    }
+  });
+</script>

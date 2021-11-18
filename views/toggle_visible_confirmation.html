@@ -1,0 +1,35 @@
+<template id="toggleVisibleConfirmationView">
+  <h2>{title}</h2>
+  <p class="message">{message}</p>
+  <p class="context">{context}</p>
+  <form>
+    <button type="submit" name="confirm">{Yes}</button>
+    <button type="submit" name="cancel">{No}</button>
+  </form>
+</template>
+
+<script>
+  app.addView({
+    templateId: 'toggleVisibleConfirmationView',
+    created: function(el) {
+      const index = this.state.visibilityConfirmationIndex;
+      const answerText = Reflect.get(this.state, `answer${index}Text`);
+      const answerScore = Reflect.get(this.state, `answer${index}Score`);
+      const answerVisibility = Reflect.get(this.state, `answer${index}Visible`);
+      const action = answerVisibility ? 'Hide' : 'Show';
+      el.querySelector('h2').innerText = `${action} Answer?`;
+      el.querySelector('.message').innerText = `Are you sure you want to ${action.toLowerCase()} the answer below?`;
+      el.querySelector('.context').innerText = `${answerText} for ${answerScore} points.`;
+      el.querySelector('button[name=confirm]').innerText = `Yes, ${action.toLowerCase()} answer`;
+      el.querySelector('button[name=cancel]').innerText = 'Nevermind';
+      el.querySelector('form').addEventListener('submit', e => {
+        e.preventDefault();
+        const { submitter } = e;
+        if (submitter.name === 'confirm') {
+          Reflect.set(this.state, `answer${index}Visible`, !answerVisibility);
+        }
+        this.nav('#board');
+      });
+    }
+  });
+</script>

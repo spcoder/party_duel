@@ -1,0 +1,39 @@
+<template id="scoreFormView">
+  <h2>Change Score</h2>
+  <form>
+    <label>
+      <input type="text" autofocus/>
+    </label>
+    <button type="submit">Save &amp; Close</button>
+  </form>
+</template>
+
+<script>
+  app.addView({
+    templateId: 'scoreFormView',
+    created: function(el, { teamNumber }) {
+      el.querySelector('h2').innerText = Reflect.get(this.state, 'teamName' + teamNumber) + ' - Score';
+      const input = el.querySelector('input');
+      input.value = Reflect.get(this.state, 'teamScore' + teamNumber);
+      el.querySelector('form').addEventListener('submit', e => {
+        e.preventDefault();
+        const sanitize = t => {
+          if (t.trim() === '') {
+            return 0;
+          }
+          const n = parseFloat(t);
+          if (isNaN(n)) {
+            return 0;
+          }
+          return n;
+        };
+        this.setNav('teamScore' + teamNumber, sanitize(e.target.querySelector('input').value), '#board');
+      });
+    },
+    mounted: function(el) {
+      const input = el.querySelector('input');
+      input.select();
+      input.focus();
+    }
+  });
+</script>
