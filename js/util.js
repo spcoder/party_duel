@@ -23,7 +23,7 @@ const saveData = (key, value) => localStorage.setItem(key, value);
 
 const loadData = (key, def) => {
   let value = localStorage.getItem(key) ?? def;
-  if (value === 'null') {
+  if (value === 'null' || value === 'undefined') {
     value = null;
   }
   saveData(key, value);

@@ -37,6 +37,7 @@ function useEngine(elementId, object) {
           const shadowRoot = wrapper.attachShadow({ mode: 'open' });
           const viewFragment = document.getElementById(route.templateId).content;
           shadowRoot.append(viewFragment.cloneNode(true));
+          Array.from(document.getElementsByTagName('link')).forEach(link => shadowRoot.appendChild(link.cloneNode(true)));
           const styleNode = styleMap.get(route.templateId);
           if (styleNode) {
             shadowRoot.append(styleNode.cloneNode(true));

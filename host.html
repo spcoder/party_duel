@@ -1,4 +1,6 @@
 <title>Host | Family Duel</title>
+<link rel="stylesheet" href="/reset.css">
+<link rel="stylesheet" href="/index.css">
 <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.33.1.min.js"></script>
 <script src="js/util.js"></script>
 <script src="js/net.js"></script>
@@ -114,6 +116,9 @@
       }
     },
     afterStart: function(state) {
+      document.addEventListener('touchstart', () => {
+        // ignore. useful for mobile to show :active normally
+      }, false);
       networking.start(state._userId, state._joinCode);
       networking.addListener(e => {
         if (e.message === 'canhazit?') {

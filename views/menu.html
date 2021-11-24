@@ -1,15 +1,17 @@
 <template id="menuView">
-  <div id="actions">
-    <h1>Menu</h1>
-    <button name="new">New Game</button>
-    <button name="continue">Continue Game</button>
-    <button name="exit">Exit</button>
-  </div>
-  <div id="newGameConfirmation">
-    <h1>New game?</h1>
-    <p>By starting a new game you'll lose all progress for your previous game. Are you sure you want to continue?</p>
-    <button name="yes">Yes, start a new game</button>
-    <button name="no">No, keep my existing game</button>
+  <div id="container">
+    <h1>Party Duel</h1>
+    <div id="actions" class="content">
+      <button name="new">New Game</button>
+      <button name="continue">Continue Game</button>
+      <button name="exit">Exit</button>
+    </div>
+    <div id="newGameConfirmation" class="content">
+      <h2>Are you sure?</h2>
+      <button name="yes">Yes, start a new game</button>
+      <button name="no">No, keep my existing game</button>
+      <p>By starting a new game you'll lose all progress for your previous game.</p>
+    </div>
   </div>
 </template>
 
@@ -18,7 +20,7 @@
     templateId: 'menuView',
     created: function(el) {
       const resetState = () => Object.keys(this.state).forEach(k => Reflect.set(this.state, k, Reflect.get(this.defaultState, k)));
-      el.getElementById('newGameConfirmation').style.display = 'none';
+      el.querySelector('#newGameConfirmation').style.display = 'none';
       el.querySelector('button[name=yes]').addEventListener('click', e => {
         e.preventDefault();
         resetState();
@@ -26,14 +28,14 @@
       });
       el.querySelector('button[name=no]').addEventListener('click', e => {
         e.preventDefault();
-        el.getElementById('newGameConfirmation').style.display = 'none';
-        el.getElementById('actions').style.display = 'block';
+        el.querySelector('#newGameConfirmation').style.display = 'none';
+        el.querySelector('#actions').style.display = 'block';
       });
       el.querySelector('button[name=new]').addEventListener('click', e => {
         e.preventDefault();
         if (previousGameExists()) {
-          el.getElementById('actions').style.display = 'none';
-          el.getElementById('newGameConfirmation').style.display = 'block';
+          el.querySelector('#actions').style.display = 'none';
+          el.querySelector('#newGameConfirmation').style.display = 'block';
         } else {
           resetState();
           this.nav('#board');
@@ -52,7 +54,29 @@
 </script>
 
 <style>
+  #container {
+    text-align: center;
+    margin-top: 10vh;
+  }
+
   h1 {
-    color: green;
+    font-size: 6rem;
+    margin-bottom: 2rem;
+    opacity: 0.5;
+  }
+
+  .content {
+    width: 80%;
+    max-width: 500px;
+    margin: auto;
+  }
+
+  h2 {
+    font-size: 4rem;
+  }
+
+  p {
+    font-size: 1.5rem;
+    margin: 2rem auto;
   }
 </style>
