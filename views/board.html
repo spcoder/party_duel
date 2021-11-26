@@ -93,7 +93,7 @@
               <div class="cell joinCode">
                 <div class="text">EU57G</div>
               </div>
-              <div class="cell edit-switch">
+              <div class="cell editSwitch">
                 <div class="text">Edit</div>
               </div>
               <div class="cell total">
@@ -111,112 +111,191 @@
   app.addView({
     templateId: 'boardView',
     created: function(el) {
-      Array.from(el.querySelectorAll('.block')).forEach(block => {
-        block.addEventListener('click', e => {
-          if (!e.currentTarget.classList.contains('editing')) {
-            e.currentTarget.classList.toggle('shown');
-          }
-        });
-      });
+      console.log('created');
+      const contentEl = el.querySelector('.content');
+      const strikesCell = el.querySelector('.strikes');
+      const joinCodeCell = el.querySelector('.joinCode');
+      const editSwitchCell = el.querySelector('.editSwitch');
+      const totalCell = el.querySelector('.total');
+      const blocks = Array.from(el.querySelectorAll('.block'));
+      const isEditing = () => contentEl.classList.contains('editing');
 
-      el.querySelector('.edit-switch').addEventListener('click', e => {
-        const contentEl = el.querySelector('.content');
+      strikesCell.setText = (v) => strikesCell.querySelector('.text').innerText = v;
+      joinCodeCell.setText = (v) => joinCodeCell.querySelector('.text').innerText = v;
+      editSwitchCell.setText = (v) => editSwitchCell.querySelector('.text').innerText = v;
+      totalCell.setText = (v) => totalCell.querySelector('.text').innerText = v;
+
+      const resetFooterCells = () => {
+        strikesCell.setText('Strikes ' + this.state.strikes);
+        strikesCell.onclick = onStrikeClick;
+        joinCodeCell.setText(this.state._joinCode);
+        joinCodeCell.onclick = null;
+        editSwitchCell.setText('Edit');
+        editSwitchCell.onclick = onEditClick;
+        totalCell.setText('Total 100');
+        totalCell.onclick = null;
+      }
+
+      const resetBlocks = () => {
+        blocks.forEach(block => block.onclick = onBlockClick);
+      }
+
+      const onEditClick = () => {
         contentEl.classList.toggle('editing');
         if (contentEl.classList.contains('editing')) {
           for (const input of el.querySelectorAll('input')) {
             input.value = input.closest('.cell').querySelector('.text').innerText;
           }
-          e.currentTarget.querySelector('.text').innerText = 'Save';
+          strikesCell.setText('Show All')
+          strikesCell.onclick = null;
+          joinCodeCell.setText('Hide All');
+          joinCodeCell.onclick = null;
+          editSwitchCell.setText('Save');
+          totalCell.setText('');
+          totalCell.onclick = null;
         } else {
           for (const input of el.querySelectorAll('input')) {
             const cell = input.closest('.cell');
             cell.querySelector('.text').innerText = input.value;
           }
-          e.currentTarget.querySelector('.text').innerText = 'Edit';
+          editSwitchCell.setText('Edit')
+          resetFooterCells();
+          resetBlocks();
         }
+      };
 
-        // const switchText = e.currentTarget.querySelector('.text');
-        // if (switchText.innerText.toLowerCase() === 'edit') {
-        //   switchText.innerText = 'Save';
-        //   for (const block of el.querySelectorAll('.block')) {
-        //     for (const input of block.querySelectorAll('input')) {
-        //       input.value = input.closest('.cell').querySelector('.text').innerText;
-        //     }
-        //     block.classList.add('editing');
-        //   }
-        // } else {
-        //   switchText.innerText = 'Edit';
-        //   for (const block of el.querySelectorAll('.block')) {
-        //     for (const input of block.querySelectorAll('input')) {
-        //       const cell = input.closest('.cell');
-        //       cell.querySelector('.text').innerText = input.value;
-        //     }
-        //     block.classList.remove('editing');
-        //   }
-        // }
-      });
+      const onConfirmShowHide = () => {
+        for (const block of el.querySelectorAll('.block.confirm')) {
+          block.classList.toggle('shown');
+          block.classList.remove('confirm');
+        }
+        resetFooterCells();
+      };
 
-      // el.querySelector('#joinCode').innerText = this.state._joinCode;
-      // el.querySelector('#teamName1').innerText = this.state.teamName1;
-      // el.querySelector('#teamScore1').innerText = this.state.teamScore1;
-      // el.querySelector('#teamName2').innerText = this.state.teamName2;
-      // el.querySelector('#teamScore2').innerText = this.state.teamScore2;
-      // el.querySelector('#question').innerText = this.state.question ?? 'No question';
-      // const answers = el.querySelector('#answers');
-      // Array(8).fill(null).forEach((_, i) => {
-      //   const index = i + 1;
-      //   const answer = document.createElement('div');
-      //   answer.setAttribute('id', `answer${index}`);
-      //   answer.classList.add('answer', !!Reflect.get(this.state, `answer${index}Visible`) ? 'shown' : 'hidden');
-      //
-      //   const answerTextContainer = document.createElement('div');
-      //   answerTextContainer.classList.add('answerTextContainer');
-      //
-      //   const answerText = document.createElement('div');
-      //   answerText.setAttribute('id', `answerText${index}`);
-      //   answerText.classList.add('answerText');
-      //   answerText.innerText = Reflect.get(this.state, `answer${index}Text`) ?? 'No answer yet';
-      //   answerTextContainer.appendChild(answerText);
-      //
-      //   const answerScoreContainer = document.createElement('div');
-      //   answerScoreContainer.classList.add('answerScoreContainer');
-      //
-      //   const answerScore = document.createElement('div');
-      //   answerScore.setAttribute('id', `answerScore${index}`);
-      //   answerScore.classList.add('answerScore');
-      //   answerScore.innerText = Reflect.get(this.state, `answer${index}Score`) ?? '0';
-      //   answerScoreContainer.appendChild(answerScore);
-      //
-      //   answer.append(answerTextContainer, answerScoreContainer);
-      //   answers.append(answer);
-      // });
+      const onCancelShowHide = () => {
+        for (const block of el.querySelectorAll('.block.confirm')) {
+          block.classList.remove('confirm');
+        }
+        resetFooterCells();
+      };
 
-      // el.querySelector('#strikes').innerText = `Strikes: ${this.state.strikes}`;
-      //
-      // el.querySelectorAll('[id^=answerText]').forEach((n, i) => {
-      //   n.innerText = Reflect.get(this.state, `answer${i + 1}Text`) ?? 'Empty answer';
-      // });
-      // el.querySelectorAll('[id^=answerScore]').forEach((n, i) => {
-      //   n.innerText = Reflect.get(this.state, `answer${i + 1}Score`) ?? 'Empty score';
-      // });
-      // el.querySelectorAll('[id^=answerVisible]').forEach((n, i) => {
-      //   n.innerText = (Reflect.get(this.state, `answer${i + 1}Visible`) ?? false) ? 'Hide' : 'Show';
-      //   n.addEventListener('click', () => {
-      //     this.setNav('visibilityConfirmationIndex', i + 1, '#toggleVisibleConfirmation');
-      //   });
-      // });
-      //
-      // el.querySelector('#show-questions-form').addEventListener('click', () => {
-      //   this.nav('#questionForm');
-      // });
-      // el.querySelector('#incrementStrikes').addEventListener('click', () => {
-      //   this.setNav('strikesModalDirection', 1, '#strikeConfirmation');
-      // });
-      // el.querySelector('#decrementStrikes').addEventListener('click', () => {
-      //   this.setNav('strikesModalDirection', -1, '#strikeConfirmation');
-      // });
-    }
+      const onBlockClick = e => {
+        if (isEditing()) {
+          return
+        }
+        const block = e.currentTarget;
+        blocks.filter(b => b !== block).forEach(b => b.classList.remove('confirm'));
+        block.classList.toggle('confirm');
+        if (block.classList.contains('confirm')) {
+          strikesCell.setText(block.classList.contains('shown') ? 'Hide?' : 'Show?');
+          strikesCell.onclick = null;
+          joinCodeCell.setText('Yes')
+          joinCodeCell.onclick = onConfirmShowHide;
+          editSwitchCell.setText('No')
+          editSwitchCell.onclick = onCancelShowHide;
+          totalCell.setText('');
+          totalCell.onclick = null;
+        }
+      };
+
+      const onStrikeClick = () => {
+        if (isEditing()) {
+          return;
+        }
+        strikesCell.onclick = null;
+        joinCodeCell.setText('+ Strike')
+        joinCodeCell.onclick = addStrike;
+        editSwitchCell.setText('- Strike')
+        editSwitchCell.onclick = removeStrike;
+        totalCell.setText('Cancel');
+        totalCell.onclick = cancelStrikes;
+      };
+
+      const addStrike = () => {
+        if (this.state.strikes < 3) {
+          this.state.strikes++;
+        }
+        resetBlocks();
+        resetFooterCells();
+      };
+
+      const removeStrike = () => {
+        if (this.state.strikes > 0) {
+          this.state.strikes--;
+        }
+        resetBlocks();
+        resetFooterCells();
+      };
+
+      const cancelStrikes = () => {
+        resetBlocks();
+        resetFooterCells();
+      };
+
+      resetBlocks();
+      resetFooterCells();
+    },
   });
+
+  // el.querySelector('#joinCode').innerText = this.state._joinCode;
+  // el.querySelector('#teamName1').innerText = this.state.teamName1;
+  // el.querySelector('#teamScore1').innerText = this.state.teamScore1;
+  // el.querySelector('#teamName2').innerText = this.state.teamName2;
+  // el.querySelector('#teamScore2').innerText = this.state.teamScore2;
+  // el.querySelector('#question').innerText = this.state.question ?? 'No question';
+  // const answers = el.querySelector('#answers');
+  // Array(8).fill(null).forEach((_, i) => {
+  //   const index = i + 1;
+  //   const answer = document.createElement('div');
+  //   answer.setAttribute('id', `answer${index}`);
+  //   answer.classList.add('answer', !!Reflect.get(this.state, `answer${index}Visible`) ? 'shown' : 'hidden');
+  //
+  //   const answerTextContainer = document.createElement('div');
+  //   answerTextContainer.classList.add('answerTextContainer');
+  //
+  //   const answerText = document.createElement('div');
+  //   answerText.setAttribute('id', `answerText${index}`);
+  //   answerText.classList.add('answerText');
+  //   answerText.innerText = Reflect.get(this.state, `answer${index}Text`) ?? 'No answer yet';
+  //   answerTextContainer.appendChild(answerText);
+  //
+  //   const answerScoreContainer = document.createElement('div');
+  //   answerScoreContainer.classList.add('answerScoreContainer');
+  //
+  //   const answerScore = document.createElement('div');
+  //   answerScore.setAttribute('id', `answerScore${index}`);
+  //   answerScore.classList.add('answerScore');
+  //   answerScore.innerText = Reflect.get(this.state, `answer${index}Score`) ?? '0';
+  //   answerScoreContainer.appendChild(answerScore);
+  //
+  //   answer.append(answerTextContainer, answerScoreContainer);
+  //   answers.append(answer);
+  // });
+
+  // el.querySelector('#strikes').innerText = `Strikes: ${this.state.strikes}`;
+  //
+  // el.querySelectorAll('[id^=answerText]').forEach((n, i) => {
+  //   n.innerText = Reflect.get(this.state, `answer${i + 1}Text`) ?? 'Empty answer';
+  // });
+  // el.querySelectorAll('[id^=answerScore]').forEach((n, i) => {
+  //   n.innerText = Reflect.get(this.state, `answer${i + 1}Score`) ?? 'Empty score';
+  // });
+  // el.querySelectorAll('[id^=answerVisible]').forEach((n, i) => {
+  //   n.innerText = (Reflect.get(this.state, `answer${i + 1}Visible`) ?? false) ? 'Hide' : 'Show';
+  //   n.addEventListener('click', () => {
+  //     this.setNav('visibilityConfirmationIndex', i + 1, '#toggleVisibleConfirmation');
+  //   });
+  // });
+  //
+  // el.querySelector('#show-questions-form').addEventListener('click', () => {
+  //   this.nav('#questionForm');
+  // });
+  // el.querySelector('#incrementStrikes').addEventListener('click', () => {
+  //   this.setNav('strikesModalDirection', 1, '#strikeConfirmation');
+  // });
+  // el.querySelector('#decrementStrikes').addEventListener('click', () => {
+  //   this.setNav('strikesModalDirection', -1, '#strikeConfirmation');
+  // });
 </script>
 
 <style>
@@ -285,13 +364,17 @@
     grid-column-gap: 1vmin;
   }
 
+  .block.confirm > .cell {
+    box-shadow: inset 0.4vmin 0.4vmin 0.4vmin var(--v-gray-invert), inset -0.4vmin -0.4vmin 0.4vmin var(--v-gray-invert);
+  }
+
   .cell {
     display: grid;
     align-items: center;
     padding: 1vmin 2vmin;
     background: black;
     border-radius: 1vmin;
-    box-shadow: inset -0.2vmin -0.2vmin 0.4vmin #f9f9f9;
+    box-shadow: inset -0.2vmin -0.2vmin 0.4vmin var(--v-gray-invert);
     overflow: hidden;
   }
 
@@ -313,23 +396,27 @@
     animation-fill-mode: forwards;
   }
 
-  .editing .cell:not(.edit-switch) .text {
+  .editing .blocks .text {
     display: none;
   }
 
   .cell > label > input {
     width: 100%;
-    color: var(--v-text-base);
+    color: var(--v-gray-invert);
     background: transparent;
     border: none;
     outline: none;
-    height: 100%;
+    opacity: 0.2;
+    height: 4vmin;
+  }
+
+  .shown > .cell > label > input {
+    opacity: 1;
   }
 
   .content:not(.editing) label {
     display: none;
   }
-
 
   .cell.answer > .text {
     width: 0;
@@ -342,7 +429,7 @@
 
   .host .cell > .text {
     width: 100%;
-    opacity: 0.1;
+    opacity: 0.2;
   }
 
   .footer > .cell > .text {
@@ -367,12 +454,12 @@
   }
 
   .footer > .cell.joinCode,
-  .footer > .cell.edit-switch {
+  .footer > .cell.editSwitch {
     display: none;
   }
 
   .host .footer > .cell.joinCode,
-  .host .footer > .cell.edit-switch {
+  .host .footer > .cell.editSwitch {
     display: grid;
   }
 
