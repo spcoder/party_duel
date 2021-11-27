@@ -88,16 +88,16 @@
             </div>
             <div class="footer">
               <div class="cell strikes">
-                <div class="text">2 Strikes</div>
+                <div class="text">----</div>
               </div>
               <div class="cell joinCode">
-                <div class="text">EU57G</div>
+                <div class="text">----</div>
               </div>
               <div class="cell editSwitch">
-                <div class="text">Edit</div>
+                <div class="text">----</div>
               </div>
               <div class="cell total">
-                <div class="text">Total 100</div>
+                <div class="text">----</div>
               </div>
             </div>
           </div>
@@ -111,191 +111,211 @@
   app.addView({
     templateId: 'boardView',
     created: function(el) {
-      console.log('created');
-      const contentEl = el.querySelector('.content');
-      const strikesCell = el.querySelector('.strikes');
-      const joinCodeCell = el.querySelector('.joinCode');
-      const editSwitchCell = el.querySelector('.editSwitch');
-      const totalCell = el.querySelector('.total');
-      const blocks = Array.from(el.querySelectorAll('.block'));
-      const isEditing = () => contentEl.classList.contains('editing');
+      const globalState = this.state;
 
-      strikesCell.setText = (v) => strikesCell.querySelector('.text').innerText = v;
-      joinCodeCell.setText = (v) => joinCodeCell.querySelector('.text').innerText = v;
-      editSwitchCell.setText = (v) => editSwitchCell.querySelector('.text').innerText = v;
-      totalCell.setText = (v) => totalCell.querySelector('.text').innerText = v;
+      class DefaultState {
 
-      const resetFooterCells = () => {
-        strikesCell.setText('Strikes ' + this.state.strikes);
-        strikesCell.onclick = onStrikeClick;
-        joinCodeCell.setText(this.state._joinCode);
-        joinCodeCell.onclick = null;
-        editSwitchCell.setText('Edit');
-        editSwitchCell.onclick = onEditClick;
-        totalCell.setText('Total 100');
-        totalCell.onclick = null;
+        contentClass() {
+          return null;
+        }
+
+        buttonTextFor(index) {
+          const total = [1, 2, 3, 4, 5, 6, 7, 8].reduce((acc, index) => {
+            const score = Number(Reflect.get(globalState, `answer${index}Score`));
+            const visible = Reflect.get(globalState, `answer${index}Visible`);
+            return visible ? acc + score : acc;
+          }, 0);
+          return [`${globalState.strikes} Strikes`, globalState._joinCode, 'Edit', `Total ${total}`][index];
+        }
+
+        onBlockClick(block, blockIndex, blocks) {
+          blocks.filter(b => b !== block).forEach(b => b.classList.remove('confirm'));
+          block.classList.toggle('confirm');
+          return new BlockVisibilityState(block, blockIndex, blocks);
+        }
+
+        onButton0() {
+          return new StrikesState();
+        }
+
+        onButton2() {
+          return new EditState();
+        }
+
       }
 
-      const resetBlocks = () => {
-        blocks.forEach(block => block.onclick = onBlockClick);
+      class BlockVisibilityState {
+
+        constructor(block, blockIndex, blocks) {
+          this.block = block;
+          this.blockIndex = blockIndex;
+          this.blocks = blocks;
+        }
+
+        contentClass() {
+          return null;
+        }
+
+        onBlockClick(block, blockIndex, blocks) {
+          blocks.filter(b => b !== block).forEach(b => b.classList.remove('confirm'));
+          block.classList.toggle('confirm');
+          return new BlockVisibilityState(block, blockIndex, blocks);
+        }
+
+        buttonTextFor(index) {
+          return [null, this.block.classList.contains('shown') ? 'Hide' : 'Show', 'Cancel', null][index];
+        }
+
+        onButton0() {
+          return null;
+        }
+
+        onButton1() {
+          const visible = !this.block.classList.contains('shown');
+          Reflect.set(globalState, `answer${this.blockIndex + 1}Visible`, visible);
+          this.blocks.forEach(b => b.classList.remove('confirm'));
+          return new DefaultState();
+        }
+
+        onButton2() {
+          this.blocks.forEach(b => b.classList.remove('confirm'));
+          return new DefaultState();
+        }
+
       }
 
-      const onEditClick = () => {
-        contentEl.classList.toggle('editing');
-        if (contentEl.classList.contains('editing')) {
+      class StrikesState {
+
+        contentClass() {
+          return null;
+        }
+
+        buttonTextFor(index) {
+          return [`${globalState.strikes} Strikes`, '+ Strike', '- Strike', 'Cancel'][index];
+        }
+
+        onButton0() {
+          return null;
+        }
+
+        onButton1() {
+          if (globalState.strikes < 3) {
+            globalState.strikes++;
+          }
+          return new DefaultState();
+        }
+
+        onButton2() {
+          if (globalState.strikes > 0) {
+            globalState.strikes--;
+          }
+          return new DefaultState();
+        }
+
+        onButton3() {
+          return new DefaultState();
+        }
+
+      }
+
+      class EditState {
+
+        constructor() {
           for (const input of el.querySelectorAll('input')) {
             input.value = input.closest('.cell').querySelector('.text').innerText;
           }
-          strikesCell.setText('Show All')
-          strikesCell.onclick = null;
-          joinCodeCell.setText('Hide All');
-          joinCodeCell.onclick = null;
-          editSwitchCell.setText('Save');
-          totalCell.setText('');
-          totalCell.onclick = null;
-        } else {
-          for (const input of el.querySelectorAll('input')) {
-            const cell = input.closest('.cell');
-            cell.querySelector('.text').innerText = input.value;
-          }
-          editSwitchCell.setText('Edit')
-          resetFooterCells();
-          resetBlocks();
         }
-      };
 
-      const onConfirmShowHide = () => {
-        for (const block of el.querySelectorAll('.block.confirm')) {
-          block.classList.toggle('shown');
-          block.classList.remove('confirm');
+        contentClass() {
+          return 'editing';
         }
-        resetFooterCells();
-      };
 
-      const onCancelShowHide = () => {
-        for (const block of el.querySelectorAll('.block.confirm')) {
-          block.classList.remove('confirm');
+        buttonTextFor(index) {
+          return ['Show All', 'Hide All', 'Save', 'No Strikes'][index];
         }
-        resetFooterCells();
-      };
 
-      const onBlockClick = e => {
-        if (isEditing()) {
-          return
+        onButton0() {
+          [1, 2, 3, 4, 5, 6, 7, 8].forEach(index => Reflect.set(globalState, `answer${index}Visible`, true));
+          return new DefaultState();
         }
-        const block = e.currentTarget;
-        blocks.filter(b => b !== block).forEach(b => b.classList.remove('confirm'));
-        block.classList.toggle('confirm');
-        if (block.classList.contains('confirm')) {
-          strikesCell.setText(block.classList.contains('shown') ? 'Hide?' : 'Show?');
-          strikesCell.onclick = null;
-          joinCodeCell.setText('Yes')
-          joinCodeCell.onclick = onConfirmShowHide;
-          editSwitchCell.setText('No')
-          editSwitchCell.onclick = onCancelShowHide;
-          totalCell.setText('');
-          totalCell.onclick = null;
+
+        onButton1() {
+          [1, 2, 3, 4, 5, 6, 7, 8].forEach(index => Reflect.set(globalState, `answer${index}Visible`, false));
+          return new DefaultState();
         }
-      };
 
-      const onStrikeClick = () => {
-        if (isEditing()) {
-          return;
+        onButton2() {
+          Array.from(el.querySelectorAll('.block')).forEach((block, index) => {
+            const answer = block.querySelector('.answer');
+            const score = block.querySelector('.score');
+            const answerInput = answer.querySelector('input');
+            const scoreInput = score.querySelector('input');
+            Reflect.set(globalState, `answer${index + 1}Text`, answerInput.value.toUpperCase());
+            Reflect.set(globalState, `answer${index + 1}Score`, Number(scoreInput.value));
+            answer.querySelector('.text').innerText = answerInput.value;
+            score.querySelector('.text').innerText = scoreInput.value;
+          });
+          return new DefaultState();
         }
-        strikesCell.onclick = null;
-        joinCodeCell.setText('+ Strike')
-        joinCodeCell.onclick = addStrike;
-        editSwitchCell.setText('- Strike')
-        editSwitchCell.onclick = removeStrike;
-        totalCell.setText('Cancel');
-        totalCell.onclick = cancelStrikes;
-      };
 
-      const addStrike = () => {
-        if (this.state.strikes < 3) {
-          this.state.strikes++;
+        onButton3() {
+          globalState.strikes = 0;
+          return new DefaultState();
         }
-        resetBlocks();
-        resetFooterCells();
-      };
 
-      const removeStrike = () => {
-        if (this.state.strikes > 0) {
-          this.state.strikes--;
+      }
+
+      class Machine {
+
+        render(state) {
+          // update the content class
+          const content = el.querySelector('.content');
+          Array.from(content.classList).filter(cls => !['content', 'host'].includes(cls)).forEach(cls => content.classList.remove(cls));
+          content.classList.add(state.contentClass());
+
+          // set block answer, score, visibility, and handlers
+          const blocks = Array.from(el.querySelectorAll('.block'));
+          blocks.forEach((block, index) => {
+            const isVisible = !!Reflect.get(globalState, `answer${index + 1}Visible`);
+            const text = Reflect.get(globalState, `answer${index + 1}Text`);
+            const score = Reflect.get(globalState, `answer${index + 1}Score`);
+            block.querySelector('.answer .text').innerText = text;
+            block.querySelector('.score .text').innerText = score;
+            isVisible ? block.classList.add('shown') : block.classList.remove('shown');
+            if (typeof state.onBlockClick === 'function') {
+              block.onclick = () => {
+                const nextState = state.onBlockClick(block, index, blocks);
+                if (nextState) {
+                  this.render(nextState);
+                }
+              };
+            } else {
+              block.onclick = null;
+            }
+          });
+
+          // set the button texts and handlers
+          const buttonSelectors = ['.strikes', '.joinCode', '.editSwitch', '.total'];
+          Array(4).fill(0).forEach((_, index) => {
+            const button = el.querySelector(buttonSelectors[index]);
+            button.querySelector('.text').innerText = state.buttonTextFor(index);
+            button.onclick = () => {
+              const handler = Reflect.get(state, `onButton${index}`);
+              if (handler) {
+                const nextState = handler.apply(state, []);
+                if (nextState) {
+                  this.render(nextState);
+                }
+              }
+            };
+          });
         }
-        resetBlocks();
-        resetFooterCells();
-      };
 
-      const cancelStrikes = () => {
-        resetBlocks();
-        resetFooterCells();
-      };
+      }
 
-      resetBlocks();
-      resetFooterCells();
+      new Machine().render(new DefaultState());
     },
   });
-
-  // el.querySelector('#joinCode').innerText = this.state._joinCode;
-  // el.querySelector('#teamName1').innerText = this.state.teamName1;
-  // el.querySelector('#teamScore1').innerText = this.state.teamScore1;
-  // el.querySelector('#teamName2').innerText = this.state.teamName2;
-  // el.querySelector('#teamScore2').innerText = this.state.teamScore2;
-  // el.querySelector('#question').innerText = this.state.question ?? 'No question';
-  // const answers = el.querySelector('#answers');
-  // Array(8).fill(null).forEach((_, i) => {
-  //   const index = i + 1;
-  //   const answer = document.createElement('div');
-  //   answer.setAttribute('id', `answer${index}`);
-  //   answer.classList.add('answer', !!Reflect.get(this.state, `answer${index}Visible`) ? 'shown' : 'hidden');
-  //
-  //   const answerTextContainer = document.createElement('div');
-  //   answerTextContainer.classList.add('answerTextContainer');
-  //
-  //   const answerText = document.createElement('div');
-  //   answerText.setAttribute('id', `answerText${index}`);
-  //   answerText.classList.add('answerText');
-  //   answerText.innerText = Reflect.get(this.state, `answer${index}Text`) ?? 'No answer yet';
-  //   answerTextContainer.appendChild(answerText);
-  //
-  //   const answerScoreContainer = document.createElement('div');
-  //   answerScoreContainer.classList.add('answerScoreContainer');
-  //
-  //   const answerScore = document.createElement('div');
-  //   answerScore.setAttribute('id', `answerScore${index}`);
-  //   answerScore.classList.add('answerScore');
-  //   answerScore.innerText = Reflect.get(this.state, `answer${index}Score`) ?? '0';
-  //   answerScoreContainer.appendChild(answerScore);
-  //
-  //   answer.append(answerTextContainer, answerScoreContainer);
-  //   answers.append(answer);
-  // });
-
-  // el.querySelector('#strikes').innerText = `Strikes: ${this.state.strikes}`;
-  //
-  // el.querySelectorAll('[id^=answerText]').forEach((n, i) => {
-  //   n.innerText = Reflect.get(this.state, `answer${i + 1}Text`) ?? 'Empty answer';
-  // });
-  // el.querySelectorAll('[id^=answerScore]').forEach((n, i) => {
-  //   n.innerText = Reflect.get(this.state, `answer${i + 1}Score`) ?? 'Empty score';
-  // });
-  // el.querySelectorAll('[id^=answerVisible]').forEach((n, i) => {
-  //   n.innerText = (Reflect.get(this.state, `answer${i + 1}Visible`) ?? false) ? 'Hide' : 'Show';
-  //   n.addEventListener('click', () => {
-  //     this.setNav('visibilityConfirmationIndex', i + 1, '#toggleVisibleConfirmation');
-  //   });
-  // });
-  //
-  // el.querySelector('#show-questions-form').addEventListener('click', () => {
-  //   this.nav('#questionForm');
-  // });
-  // el.querySelector('#incrementStrikes').addEventListener('click', () => {
-  //   this.setNav('strikesModalDirection', 1, '#strikeConfirmation');
-  // });
-  // el.querySelector('#decrementStrikes').addEventListener('click', () => {
-  //   this.setNav('strikesModalDirection', -1, '#strikeConfirmation');
-  // });
 </script>
 
 <style>

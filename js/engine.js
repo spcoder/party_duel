@@ -61,7 +61,7 @@ function useEngine(elementId, object) {
           }
           return ok;
         }
-        return false;
+        return true;
       };
       this.state = new Proxy({ ...this.state, _engineStarted: false }, { set });
       this.state._engineStarted = true; // turn the key
