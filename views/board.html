@@ -8,81 +8,81 @@
               <div class="block">
                 <div class="cell answer">
                   <div class="text">Go to the beach</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="1"/></label>
                 </div>
                 <div class="cell score">
                   <div class="text">99</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="2"/></label>
                 </div>
               </div>
               <div class="block">
                 <div class="cell answer">
                   <div class="text">Swim/Surf</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="9"/></label>
                 </div>
                 <div class="cell score">
                   <div class="text">17</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="10"/></label>
                 </div>
               </div>
               <div class="block">
                 <div class="cell answer">
                   <div class="text">Fresh Oranges</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="3"/></label>
                 </div>
                 <div class="cell score">
                   <div class="text">3</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="4"/></label>
                 </div>
               </div>
               <div class="block">
                 <div class="cell answer">
                   <div class="text">Go Fishing</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="11"/></label>
                 </div>
                 <div class="cell score">
                   <div class="text">2</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="12"/></label>
                 </div>
               </div>
               <div class="block">
                 <div class="cell answer">
                   <div class="text">Sweat</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="5"/></label>
                 </div>
                 <div class="cell score">
                   <div class="text">2</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="6"/></label>
                 </div>
               </div>
               <div class="block">
                 <div class="cell answer">
                   <div class="text">Bathing Suits</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="13"/></label>
                 </div>
                 <div class="cell score">
                   <div class="text">2</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="14"/></label>
                 </div>
               </div>
               <div class="block">
                 <div class="cell answer">
                   <div class="text">Summer Clothes</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="7"/></label>
                 </div>
                 <div class="cell score">
                   <div class="text">2</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="8"/></label>
                 </div>
               </div>
               <div class="block">
                 <div class="cell answer">
                   <div class="text">Go Golfing</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="15"/></label>
                 </div>
                 <div class="cell score">
                   <div class="text">2</div>
-                  <label><input type="text"/></label>
+                  <label><input type="text" tabindex="16"/></label>
                 </div>
               </div>
             </div>
@@ -346,7 +346,7 @@
     display: grid;
     padding: 6vmin;
     border-radius: 6vmin;
-    box-shadow: inset 0 0 0 2vmin black, inset 0 0 0 4vmin blue;
+    box-shadow: inset 0 0 0 2vmin black, inset 0 0 0 4vmin var(--v-board-base);
   }
 
   .panel {
@@ -355,7 +355,7 @@
     grid-gap: 2vmin;
     border-radius: 1vmin;
     background: rgb(2, 0, 36);
-    background: radial-gradient(circle, rgba(39, 90, 207, 1) 0%, rgba(0, 0, 255, 1) 100%);
+    background: radial-gradient(circle, var(--v-board-light) 0%, var(--v-board-base) 100%);
     padding: 8vmin 4vmin;
   }
 

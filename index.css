@@ -1,16 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
 :root {
-  --v-primary-base: #3AA6E6;
+  --v-primary-base: #4cc9f0;
   --v-primary-border: #3092cc;
   --v-primary-hover: #5FBDF4;
   --v-primary-active: #3ca3e3;
-  --v-primary-invert: #f9f9f9;
+  --v-primary-invert: #040498;
+
+  --v-button-base: #b5179e;
+  --v-button-text: #f9f9f9;
+  --v-button-border: #7209b7;
+  --v-button-hover: #4cc9f0;
+  --v-button-active: #4895ef;
+
   --v-text-base: #cccccc;
   --v-gray-base: #777;
   --v-gray-border: #555;
   --v-gray-invert: #f9f9f9;
   --v-gray-light: #d2d0d0;
+
+  --v-board-base: #480ca8;
+  --v-board-light: #560bad;
 }
 
 *, html {
@@ -28,32 +38,42 @@ body {
 }
 
 body, input, label, textarea, button {
-  font-family: 'Bebas Neue', monospace;
+  font-family: 'Bebas Neue', Arial, sans-serif;
 }
 
 h1, h2 {
   font-weight: 700;
 }
 
+h1 {
+  font-size: 10vw;
+  line-height: 1;
+  color: var(--v-primary-base);
+}
+
+h2 {
+  font-size: 4vw;
+  margin-bottom: 6vh;
+}
+
 button, .button {
   display: block;
-  font-size: 2vw;
+  font-size: 3vw;
   width: 100%;
   margin: 1vh auto;
   padding: 1.5vw 0 1vw 0;
-  background: var(--v-primary-base);
-  color: var(--v-primary-invert);
-  border: 0.5vw solid var(--v-primary-border);
+  background: var(--v-button-base);
+  color: var(--v-button-text);
+  border: 0.5vw solid var(--v-button-border);
   border-radius: 1vw;
   cursor: pointer;
   text-decoration: none;
 }
 
 button:hover, .button:hover {
-  background: var(--v-primary-hover);
+  background: var(--v-button-hover);
 }
 
 button:active, .button:active {
-  background: var(--v-primary-active);
-  color: white;
+  background: var(--v-button-active);
 }
