@@ -1,4 +1,4 @@
-<title>Host | Family Duel</title>
+<title>Host | Party Duel</title>
 <link rel="stylesheet" href="/reset.css">
 <link rel="stylesheet" href="/index.css">
 <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.33.1.min.js"></script>
@@ -11,7 +11,6 @@
 <script>
   const app = useEngine('app', {
     routes: {
-      start: { file: 'views/start.html', templateId: 'startView' },
       menu: { file: 'views/menu.html', templateId: 'menuView' },
       board: { file: 'views/board.html', templateId: 'boardView' },
       teamName1Form: { file: 'views/team_name_form.html', templateId: 'teamNameFormView', context: { title: 'Team 1', prop: 'teamName1' } },
@@ -22,8 +21,8 @@
       strikeConfirmation: { file: 'views/strike_confirmation.html', templateId: 'strikeConfirmationView' },
       toggleVisibleConfirmation: { file: 'views/toggle_visible_confirmation.html', templateId: 'toggleVisibleConfirmationView' },
     },
-    routeDefault: 'start',
-    routeNotFound: 'start',
+    routeDefault: 'menu',
+    routeNotFound: 'menu',
     defaultState: {
       // not publishable
       _userId: uuid(),
