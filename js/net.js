@@ -30,12 +30,17 @@ const networking = {
 };
 
 const publishState = function(channel, state) {
-  const message = Object.keys(state)
-    .filter(k => !k.startsWith('_'))
-    .reduce((acc, k) => {
-      Reflect.set(acc, k, Reflect.get(state, k));
+  const message = {
+    strikes: state.strikes,
+    ...[1, 2, 3, 4, 5, 6, 7, 8].reduce((acc, index) => {
+      const answerText = (Reflect.get(state, `answer${index}Text`) || '').trim() || null;
+      const answerScore = Reflect.get(state, `answer${index}Score`);
+      const isVisible = Reflect.get(state, `answer${index}Visible`) === true;
+      Reflect.set(acc, `answer${index}Text`, isVisible && answerText ? answerText : null);
+      Reflect.set(acc, `answer${index}Score`, isVisible && answerText ? answerScore : null);
       return acc;
-    }, {});
+    }, {})
+  };
   console.log('publishing', channel, message);
   networking.publish(channel, message);
 };

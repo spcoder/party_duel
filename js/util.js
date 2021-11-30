@@ -31,5 +31,8 @@ const loadData = (key, def) => {
 };
 
 const loadBoolean = (key, def) => loadData(key, def) === 'true';
-const loadNumber = (key, def) => Number(loadData(key, def));
+const loadNumber = (key, def) => {
+  const n = Number(loadData(key, def));
+  return isNaN(n) ? 0 : n;
+};
 

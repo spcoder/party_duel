@@ -19,8 +19,11 @@
   --v-gray-invert: #f9f9f9;
   --v-gray-light: #d2d0d0;
 
-  --v-board-base: #480ca8;
-  --v-board-light: #560bad;
+  --v-board-base: #5d0ca8;
+  --v-board-light: #5f0bad;
+
+  --v-board-alt-base: #0c7ea8;
+  --v-board-alt-light: #0badad;
 }
 
 *, html {
