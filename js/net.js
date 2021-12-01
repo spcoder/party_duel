@@ -19,12 +19,14 @@ const networking = {
   addListener: function(fn) {
     console.log('adding listener');
     this.pubnub.addListener({
-      status: e => console.log('status', e),
+      status: e => {
+        console.log('status', e);
+      },
       message: e => {
         console.log('raw message', e);
         if (e.publisher !== this.pubnub.getUUID()) {
           console.log('message', e);
-          Reflect.apply(fn, null, e);
+          Reflect.apply(fn, null, [e]);
         }
       },
     });

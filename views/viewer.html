@@ -112,11 +112,14 @@
   app.addView({
     templateId: 'viewerView',
     created: function(el) {
-      networking.publish(this.state._joinCode, 'canhazit');
+      setTimeout(() => {
+        networking.publish(this.state._joinCode, 'canhazit?');
+      }, 2000);
+      console.log('$viewerState', this.state.$viewerState);
     },
   });
 </script>
 
 <style>
-  @import url("/css/board.css");
+  @import url("css/board.css");
 </style>
