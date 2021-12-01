@@ -53,10 +53,15 @@ function useEngine(elementId, object) {
     start: function() {
       window.addEventListener('hashchange', () => this.render());
       const set = (target, prop, newValue) => {
+
+        const routeKey = location.hash.replaceAll('#', '').trim() || this.routeDefault;
+        const route = Reflect.get(this.routes, routeKey) ?? Reflect.get(this.routes, this.routeNotFound);
+
         if (Reflect.get(target, prop) !== newValue) {
           const ok = Reflect.set(target, prop, newValue);
           if (ok) {
             applyHandler(this, this, 'afterStateChange', prop, Reflect.get(target, prop), newValue, this.state);
+            applyHandler(this, views.get(route.templateId), 'afterStateChange', prop, Reflect.get(target, prop), newValue, this.state);
             this.render();
           }
           return ok;

@@ -112,11 +112,12 @@
   app.addView({
     templateId: 'viewerView',
     created: function(el) {
-      setTimeout(() => {
-        networking.publish(this.state._joinCode, 'canhazit?');
-      }, 2000);
-      console.log('$viewerState', this.state.$viewerState);
+      networking.publish(this.state._joinCode, 'canhazit?');
     },
+    afterStateChange: function(prop, oldValue, newValue, state) {
+      console.log('viewer#afterStateChange', prop, oldValue, newValue, state);
+      console.log('$viewerState', this.state.$viewerState);
+    }
   });
 </script>
 
