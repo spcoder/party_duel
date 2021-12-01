@@ -5,7 +5,7 @@
       <div id="actions" class="panel">
         <button name="new">New Game</button>
         <button name="continue">Continue Game</button>
-        <button name="exit">Exit</button>
+        <button name="back">Back</button>
       </div>
       <div id="newGameConfirmation" class="panel">
         <h2>Are you sure?</h2>
@@ -26,7 +26,7 @@
       el.querySelector('button[name=yes]').addEventListener('click', e => {
         e.preventDefault();
         resetState();
-        this.nav('#board');
+        this.nav('#hostBoard');
       });
       el.querySelector('button[name=no]').addEventListener('click', e => {
         e.preventDefault();
@@ -40,16 +40,16 @@
           el.querySelector('#newGameConfirmation').style.display = 'grid';
         } else {
           resetState();
-          this.nav('#board');
+          this.nav('#hostBoard');
         }
       });
       el.querySelector('button[name=continue]').addEventListener('click', e => {
         e.preventDefault();
-        this.nav('#board');
+        this.nav('#hostBoard');
       });
-      el.querySelector('button[name=exit]').addEventListener('click', e => {
+      el.querySelector('button[name=back]').addEventListener('click', e => {
         e.preventDefault();
-        location.href = 'index.html';
+        this.nav('#start');
       });
     }
   });

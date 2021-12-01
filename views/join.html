@@ -1,0 +1,74 @@
+<template id="joinView">
+  <div id="container">
+    <div class="content">
+      <h1>Party Duel</h1>
+      <p>Enter the host's join code.</p>
+      <form>
+        <label><input type="text" name="joinCode" autofocus/></label>
+        <button type="submit">Join</button>
+        <button name="back">Back</button>
+      </form>
+    </div>
+  </div>
+</template>
+
+<script>
+  app.addView({
+    templateId: 'joinView',
+    created: function(el) {
+      const form = el.querySelector('form');
+      const input = el.querySelector('input');
+      form.onsubmit = e => {
+        e.preventDefault();
+        const code = input.value;
+        if (!!code) {
+          this.state._joinCode = code.toUpperCase();
+          this.nav('#viewerBoard');
+        }
+      };
+      el.querySelector('button[name=back]').onclick = () => this.nav('#start');
+    },
+    mounted: function(el) {
+      el.querySelector('input').focus();
+      el.querySelector('input').select();
+    }
+  });
+</script>
+
+<style>
+  #container {
+    text-align: center;
+  }
+
+  .content {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    width: 60vw;
+    height: 100vh;
+    margin: auto;
+  }
+
+  p {
+    font-size: 5vh;
+    margin: 2vh auto;
+  }
+
+  form {
+    display: grid;
+    width: 100%;
+  }
+
+  input {
+    font-size: 7vh;
+    padding: 1vw 2vh;
+    margin-bottom: 2vh;
+    border: 0.5vw solid var(--v-button-border);
+    border-radius: 1vw;
+    outline: none;
+    background: var(--v-button-text);
+  }
+</style>

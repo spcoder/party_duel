@@ -1,30 +1,115 @@
 <title>Party Duel</title>
 <link rel="stylesheet" href="reset.css">
 <link rel="stylesheet" href="index.css">
+<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.33.1.min.js"></script>
+<script src="js/util.js"></script>
+<script src="js/net.js"></script>
+<script src="js/engine.js"></script>
 
-<style>
-  #container {
-    text-align: center;
-  }
+<div id="app"></div>
 
-  #content {
-    display: grid;
-    grid-template-columns: 1fr;
-    align-content: center;
-    align-items: center;
-    justify-content: center;
-    justify-items: center;
-    width: 60vw;
-    height: 100vh;
-    margin: auto;
-  }
-</style>
-
-<div id="container">
-  <div id="content">
-    <h1>Party Duel</h1>
-    <h2>Are you the host of the game?</h2>
-    <a class="button" href="host.html">Yes, I'm the host</a>
-    <a class="button" href="view.html">Nope, just viewing</a>
-  </div>
-</div>
+<script>
+  const app = useEngine('app', {
+    routes: {
+      start: { file: 'views/start.html', templateId: 'startView' },
+      menu: { file: 'views/menu.html', templateId: 'menuView' },
+      hostBoard: { file: 'views/board.html', templateId: 'boardView' },
+      viewerJoin: { file: 'views/join.html', templateId: 'joinView' },
+      viewerBoard: { file: 'views/viewer.html', templateId: 'viewerView' },
+    },
+    routeDefault: 'start',
+    routeNotFound: 'start',
+    defaultState: {
+      // not publishable
+      _userId: uuid(),
+      _joinCode: generateJoinCode(),
+      _viewerState: undefined,
+      // publishable
+      strikes: 0,
+      answer1Text: undefined,
+      answer1Score: undefined,
+      answer1Visible: false,
+      answer2Text: undefined,
+      answer2Score: undefined,
+      answer2Visible: false,
+      answer3Text: undefined,
+      answer3Score: undefined,
+      answer3Visible: false,
+      answer4Text: undefined,
+      answer4Score: undefined,
+      answer4Visible: false,
+      answer5Text: undefined,
+      answer5Score: undefined,
+      answer5Visible: false,
+      answer6Text: undefined,
+      answer6Score: undefined,
+      answer6Visible: false,
+      answer7Text: undefined,
+      answer7Score: undefined,
+      answer7Visible: false,
+      answer8Text: undefined,
+      answer8Score: undefined,
+      answer8Visible: false
+    },
+    state: {
+      // not publishable
+      _userId: loadData('_userId', uuid()),
+      _joinCode: loadData('_joinCode', generateJoinCode()),
+      _viewerState: undefined,
+      // publishable
+      strikes: loadNumber('strikes', 0),
+      answer1Text: loadData('answer1Text', null),
+      answer1Score: loadNumber('answer1Score', null),
+      answer1Visible: loadBoolean('answer1Visible', false),
+      answer2Text: loadData('answer2Text', null),
+      answer2Score: loadNumber('answer2Score', null),
+      answer2Visible: loadBoolean('answer2Visible', false),
+      answer3Text: loadData('answer3Text', null),
+      answer3Score: loadNumber('answer3Score', null),
+      answer3Visible: loadBoolean('answer3Visible', false),
+      answer4Text: loadData('answer4Text', null),
+      answer4Score: loadNumber('answer4Score', null),
+      answer4Visible: loadBoolean('answer4Visible', false),
+      answer5Text: loadData('answer5Text', null),
+      answer5Score: loadNumber('answer5Score', null),
+      answer5Visible: loadBoolean('answer5Visible', false),
+      answer6Text: loadData('answer6Text', null),
+      answer6Score: loadNumber('answer6Score', null),
+      answer6Visible: loadBoolean('answer6Visible', false),
+      answer7Text: loadData('answer7Text', null),
+      answer7Score: loadNumber('answer7Score', null),
+      answer7Visible: loadBoolean('answer7Visible', false),
+      answer8Text: loadData('answer8Text', null),
+      answer8Score: loadNumber('answer8Score', null),
+      answer8Visible: loadBoolean('answer8Visible', false)
+    },
+    afterStateChange: function(prop, oldValue, newValue, state) {
+      // save
+      saveData(prop, newValue);
+      // detect channel change
+      if (prop === '_joinCode') {
+        networking.unsubscribe(oldValue);
+        networking.subscribe(newValue);
+      }
+      // publish
+      if (!prop.startsWith('_')) {
+        publishState(state._joinCode, state);
+      }
+    },
+    afterStart: function(state) {
+      document.addEventListener('touchstart', () => {
+        // ignore. useful for mobile to show :active normally
+      }, false);
+      networking.start(state._userId);
+      networking.addListener(e => {
+        console.log('new message!', e);
+        if (e.message === 'canhazit?') {
+          publishState(state._joinCode, state);
+        } else {
+          this.state._viewerState = e.message;
+        }
+      });
+      networking.subscribe(state._joinCode);
+    }
+  });
+</script>

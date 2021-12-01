@@ -59,6 +59,10 @@ h2 {
   margin-bottom: 6vh;
 }
 
+input, textarea {
+  width: 100%;
+}
+
 button, .button {
   display: block;
   font-size: 3vw;

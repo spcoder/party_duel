@@ -1,0 +1,122 @@
+<template id="viewerView">
+  <div class="host content">
+    <div class="ratio">
+      <div class="container">
+        <div class="board">
+          <div class="panel">
+            <div class="blocks">
+              <div class="block">
+                <div class="cell answer">
+                  <div class="text">--</div>
+                  <label><input type="text" tabindex="1"/></label>
+                </div>
+                <div class="cell score">
+                  <div class="text">--</div>
+                  <label><input type="number" tabindex="2"/></label>
+                </div>
+              </div>
+              <div class="block">
+                <div class="cell answer">
+                  <div class="text">--</div>
+                  <label><input type="text" tabindex="9"/></label>
+                </div>
+                <div class="cell score">
+                  <div class="text">--</div>
+                  <label><input type="number" tabindex="10"/></label>
+                </div>
+              </div>
+              <div class="block">
+                <div class="cell answer">
+                  <div class="text">--</div>
+                  <label><input type="text" tabindex="3"/></label>
+                </div>
+                <div class="cell score">
+                  <div class="text">--</div>
+                  <label><input type="number" tabindex="4"/></label>
+                </div>
+              </div>
+              <div class="block">
+                <div class="cell answer">
+                  <div class="text">--</div>
+                  <label><input type="text" tabindex="11"/></label>
+                </div>
+                <div class="cell score">
+                  <div class="text">--</div>
+                  <label><input type="number" tabindex="12"/></label>
+                </div>
+              </div>
+              <div class="block">
+                <div class="cell answer">
+                  <div class="text">--</div>
+                  <label><input type="text" tabindex="5"/></label>
+                </div>
+                <div class="cell score">
+                  <div class="text">--</div>
+                  <label><input type="number" tabindex="6"/></label>
+                </div>
+              </div>
+              <div class="block">
+                <div class="cell answer">
+                  <div class="text">--</div>
+                  <label><input type="text" tabindex="13"/></label>
+                </div>
+                <div class="cell score">
+                  <div class="text">--</div>
+                  <label><input type="number" tabindex="14"/></label>
+                </div>
+              </div>
+              <div class="block">
+                <div class="cell answer">
+                  <div class="text">--</div>
+                  <label><input type="text" tabindex="7"/></label>
+                </div>
+                <div class="cell score">
+                  <div class="text">--</div>
+                  <label><input type="number" tabindex="8"/></label>
+                </div>
+              </div>
+              <div class="block">
+                <div class="cell answer">
+                  <div class="text">--</div>
+                  <label><input type="text" tabindex="15"/></label>
+                </div>
+                <div class="cell score">
+                  <div class="text">--</div>
+                  <label><input type="number" tabindex="16"/></label>
+                </div>
+              </div>
+            </div>
+            <div class="footer">
+              <div class="cell strikes">
+                <div class="text">----</div>
+              </div>
+              <div class="cell joinCode">
+                <div class="text">----</div>
+              </div>
+              <div class="cell editSwitch">
+                <div class="text">----</div>
+              </div>
+              <div class="cell total">
+                <div class="text">----</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bigStrike">❌</div>
+</template>
+
+<script>
+  app.addView({
+    templateId: 'viewerView',
+    created: function(el) {
+      networking.publish(this.state._joinCode, 'canhazit');
+    },
+  });
+</script>
+
+<style>
+  @import url("/css/board.css");
+</style>
