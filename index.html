@@ -1,4 +1,5 @@
 <title>Party Duel</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="stylesheet" href="reset.css">
 <link rel="stylesheet" href="index.css">
 <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.33.1.min.js"></script>
@@ -9,6 +10,12 @@
 <div id="app"></div>
 
 <script>
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      window.scrollTo(0, 1);
+    }, 0);
+  });
+
   const app = useEngine('app', {
     routes: {
       start: { file: 'views/start.html', templateId: 'startView' },

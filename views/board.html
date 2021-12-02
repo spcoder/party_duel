@@ -239,17 +239,7 @@
         }
 
         buttonTextFor(index) {
-          return ['Show All', 'Hide All', 'Save', 'No Strikes'][index];
-        }
-
-        onButton0() {
-          [1, 2, 3, 4, 5, 6, 7, 8].forEach(index => Reflect.set(globalState, `answer${index}Visible`, true));
-          return new DefaultState();
-        }
-
-        onButton1() {
-          [1, 2, 3, 4, 5, 6, 7, 8].forEach(index => Reflect.set(globalState, `answer${index}Visible`, false));
-          return new DefaultState();
+          return [null, null, 'Save', 'No Strikes'][index];
         }
 
         onButton2() {
@@ -331,5 +321,6 @@
 </script>
 
 <style>
+  /*noinspection CssUnknownTarget*/
   @import url("css/board.css");
 </style>

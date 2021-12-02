@@ -60,8 +60,9 @@ function useEngine(elementId, object) {
         if (Reflect.get(target, prop) !== newValue) {
           const ok = Reflect.set(target, prop, newValue);
           if (ok) {
+            const shadowRoot = container.firstElementChild?.shadowRoot;
             applyHandler(this, this, 'afterStateChange', prop, Reflect.get(target, prop), newValue, this.state);
-            applyHandler(this, views.get(route.templateId), 'afterStateChange', prop, Reflect.get(target, prop), newValue, this.state);
+            applyHandler(this, views.get(route.templateId), 'afterStateChange', shadowRoot, prop, Reflect.get(target, prop), newValue, this.state);
             this.render();
           }
           return ok;
