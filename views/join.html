@@ -4,8 +4,8 @@
       <h1>Party Duel</h1>
       <p>Enter the host's join code.</p>
       <form>
-        <label><input type="text" name="joinCode" autofocus/></label>
-        <button type="submit">Join</button>
+        <label><input type="text" name="joinCode" autofocus maxlength="5"/></label>
+        <button type="submit" disabled>Join</button>
         <button name="back">Back</button>
       </form>
     </div>
@@ -18,6 +18,10 @@
     created: function(el) {
       const form = el.querySelector('form');
       const input = el.querySelector('input');
+      const joinButton = el.querySelector('button[type=submit]');
+      input.onkeyup = () => {
+        input.value ? joinButton.removeAttribute('disabled') : joinButton.setAttribute('disabled', 'disabled');
+      };
       form.onsubmit = e => {
         e.preventDefault();
         const code = input.value;
@@ -26,7 +30,10 @@
           this.nav('#viewerBoard');
         }
       };
-      el.querySelector('button[name=back]').onclick = () => this.nav('#start');
+      el.querySelector('button[name=back]').onclick = e => {
+        e.preventDefault();
+        this.nav('#start');
+      };
     },
     mounted: function(el) {
       el.querySelector('input').focus();

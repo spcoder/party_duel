@@ -22,6 +22,7 @@
     templateId: 'menuView',
     created: function(el) {
       const resetState = () => Object.keys(this.state).forEach(k => Reflect.set(this.state, k, Reflect.get(this.defaultState, k)));
+      const canContinue = this.state._canContinue;
       el.querySelector('#newGameConfirmation').style.display = 'none';
       el.querySelector('button[name=yes]').addEventListener('click', e => {
         e.preventDefault();
@@ -35,7 +36,7 @@
       });
       el.querySelector('button[name=new]').addEventListener('click', e => {
         e.preventDefault();
-        if (previousGameExists()) {
+        if (canContinue) {
           el.querySelector('#actions').style.display = 'none';
           el.querySelector('#newGameConfirmation').style.display = 'grid';
         } else {
@@ -43,10 +44,15 @@
           this.nav('#hostBoard');
         }
       });
-      el.querySelector('button[name=continue]').addEventListener('click', e => {
-        e.preventDefault();
-        this.nav('#hostBoard');
-      });
+      if (canContinue) {
+        el.querySelector('button[name=continue]').style.display = 'block';
+        el.querySelector('button[name=continue]').addEventListener('click', e => {
+          e.preventDefault();
+          this.nav('#hostBoard');
+        });
+      } else {
+        el.querySelector('button[name=continue]').style.display = 'none';
+      }
       el.querySelector('button[name=back]').addEventListener('click', e => {
         e.preventDefault();
         this.nav('#start');

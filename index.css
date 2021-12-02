@@ -12,6 +12,8 @@
   --v-button-border: #7209b7;
   --v-button-hover: #4cc9f0;
   --v-button-active: #4895ef;
+  --v-button-disabled: #560f48;
+  --v-button-disabled-text: #771564;
 
   --v-text-base: #cccccc;
   --v-gray-base: #777;
@@ -19,8 +21,8 @@
   --v-gray-invert: #f9f9f9;
   --v-gray-light: #d2d0d0;
 
-  --v-board-base: #5d0ca8;
-  --v-board-light: #5f0bad;
+  --v-board-base: #a2148d;
+  --v-board-light: #d962c7;
 
   --v-board-alt-base: #0c7ea8;
   --v-board-alt-light: #0badad;
@@ -29,6 +31,9 @@
 *, html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   box-sizing: border-box;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
 }
 
@@ -63,6 +68,12 @@ input, textarea {
   width: 100%;
 }
 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 button, .button {
   display: block;
   font-size: 3vw;
@@ -83,4 +94,9 @@ button:hover, .button:hover {
 
 button:active, .button:active {
   background: var(--v-button-active);
+}
+
+button:disabled {
+  background: var(--v-button-disabled);
+  color: var(--v-button-disabled-text);
 }

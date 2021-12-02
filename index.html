@@ -10,12 +10,6 @@
 <div id="app"></div>
 
 <script>
-  window.addEventListener('load', function() {
-    setTimeout(function() {
-      window.scrollTo(0, 1);
-    }, 0);
-  });
-
   const app = useEngine('app', {
     routes: {
       start: { file: 'views/start.html', templateId: 'startView' },
@@ -32,6 +26,7 @@
       // not publishable
       _userId: uuid(),
       _joinCode: generateJoinCode(),
+      _canContinue: false,
       // publishable
       strikes: 0,
       answer1Text: undefined,
@@ -65,6 +60,7 @@
       // not publishable
       _userId: loadData('_userId', uuid()),
       _joinCode: loadData('_joinCode', generateJoinCode()),
+      _canContinue: loadData('_canContinue', false),
       // publishable
       strikes: loadNumber('strikes', 0),
       answer1Text: loadData('answer1Text', null),
@@ -114,7 +110,6 @@
       }, false);
       networking.start(state._userId);
       networking.addListener(e => {
-        console.log('new message!', e);
         if (e.message === 'canhazit?') {
           publishState(state._joinCode, state);
         } else {

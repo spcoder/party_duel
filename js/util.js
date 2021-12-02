@@ -17,8 +17,6 @@ const generateJoinCode = () => {
   return code;
 };
 
-const previousGameExists = () => !!localStorage.getItem('_joinCode');
-
 const saveData = (key, value) => localStorage.setItem(key, value);
 
 const loadData = (key, def) => {

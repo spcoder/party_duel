@@ -114,6 +114,7 @@
     created: function(el) {
       const EMPTY_CELL = '';
       const globalState = this.state;
+      globalState._canContinue = true;
 
       class DefaultState {
 
@@ -194,7 +195,7 @@
         }
 
         buttonTextFor(index) {
-          return [`${globalState.strikes} Strikes`, '+ Strike', '- Strike', 'Cancel'][index];
+          return [null, '+ Strike', '- Strike', 'Cancel'][index];
         }
 
         onButton1() {
@@ -239,7 +240,7 @@
         }
 
         buttonTextFor(index) {
-          return [null, null, 'Save', 'No Strikes'][index];
+          return [null, null, 'Save', 'Cancel'][index];
         }
 
         onButton2() {
@@ -259,7 +260,6 @@
         }
 
         onButton3() {
-          globalState.strikes = 0;
           return new DefaultState();
         }
 
