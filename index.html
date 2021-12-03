@@ -1,5 +1,8 @@
 <title>Party Duel</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="reset.css">
 <link rel="stylesheet" href="index.css">
 <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.33.1.min.js"></script>
@@ -7,9 +10,31 @@
 <script src="js/net.js"></script>
 <script src="js/engine.js"></script>
 
+<button class="muted" name="mute">🔈</button>
 <div id="app"></div>
 
 <script>
+  window.strike = new Audio('strike.wav');
+  window.ding = new Audio('ding.wav');
+  window.opening = new Audio('opening.wav');
+  window.opening.volume = 0.5;
+
+  document.body.querySelector('button[name=mute]').onclick = e => {
+    e.preventDefault();
+    e.target.classList.toggle('muted');
+    if (e.target.classList.contains('muted')) {
+      window.opening.pause();
+      e.target.innerText = '🔈';
+    } else {
+      window.opening.addEventListener('ended', function() {
+        this.currentTime = 0;
+        this.play();
+      }, false);
+      window.opening.play();
+      e.target.innerText = '🔇';
+    }
+  };
+
   const app = useEngine('app', {
     routes: {
       start: { file: 'views/start.html', templateId: 'startView' },

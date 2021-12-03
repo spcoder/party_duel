@@ -1,5 +1,5 @@
 <template id="viewerView">
-  <div class="content">
+  <div class="content" data-initial="yes">
     <div class="ratio">
       <div class="container">
         <div class="board">
@@ -111,21 +111,23 @@
 <script>
   app.addView({
     templateId: 'viewerView',
-    created: function(el) {
+    created: function() {
       networking.publish(this.state._joinCode, 'canhazit?');
     },
     afterStateChange: function(el, prop, oldValue, newValue, state) {
+      const firstChange = el.querySelector('.content').dataset.initial === 'yes';
       const viewerState = state.$viewerState;
       const strikesEl = el.querySelector('.strikes > .text');
       const strikesShown = Number(strikesEl.dataset.strikes);
       strikesEl.innerText = `${viewerState.strikes} Strikes`;
       strikesEl.dataset.strikes = viewerState.strikes;
-      if (strikesShown < viewerState.strikes) {
+      if (!firstChange && strikesShown < viewerState.strikes) {
         const bigStrike = el.querySelector('.bigStrike');
         bigStrike.style.display = 'grid';
+        strike.play();
         setTimeout(() => {
           bigStrike.style.display = 'none';
-        }, 2000);
+        }, 1500);
       }
 
       const total = [1, 2, 3, 4, 5, 6, 7, 8].reduce((acc, index) => {
@@ -141,8 +143,19 @@
         const block = blocks.children[n - 1];
         block.querySelector('.answer > .text').innerText = answer || '--';
         block.querySelector('.score > .text').innerText = score || '--';
-        answer ? block.classList.add('shown') : block.classList.remove('shown');
+        if (answer) {
+          if (!firstChange && !block.classList.contains('shown')) {
+            ding.pause();
+            ding.currentTime = 0;
+            ding.play();
+          }
+          block.classList.add('shown');
+        } else {
+          block.classList.remove('shown');
+        }
       });
+
+      el.querySelector('.content').dataset.initial = 'no';
     }
   });
 </script>

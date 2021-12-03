@@ -1,0 +1,7 @@
+{
+  "short_name": "Party Duel",
+  "name": "Party Duel",
+  "start_url": "/index.html",
+  "display": "fullscreen",
+  "orientation": "landscape"
+}

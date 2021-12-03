@@ -2,9 +2,9 @@
   <div id="container">
     <div id="content">
       <h1>Party Duel</h1>
-      <h2>Are you the host of the game?</h2>
-      <a class="button" href="#menu">Yes. I'm the host.</a>
-      <a class="button" href="#viewerJoin">Nope. Just viewing.</a>
+      <h2>Are you the host or just a viewer of the game?</h2>
+      <a class="button" href="#menu">Host</a>
+      <a class="button" href="#viewerJoin">View</a>
     </div>
   </div>
 </template>
@@ -21,8 +21,11 @@
     align-items: center;
     justify-content: center;
     justify-items: center;
-    width: 60vw;
     height: 100vh;
     margin: auto;
+  }
+
+  .button {
+    max-width: 50%;
   }
 </style>
