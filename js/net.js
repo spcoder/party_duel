@@ -32,6 +32,7 @@ const networking = {
 
 const publishState = function(channel, state) {
   const message = {
+    joinCode: state._joinCode,
     strikes: state.strikes,
     ...[1, 2, 3, 4, 5, 6, 7, 8].reduce((acc, index) => {
       const answerText = (Reflect.get(state, `answer${index}Text`) || '').trim() || null;

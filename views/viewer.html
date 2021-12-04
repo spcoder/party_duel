@@ -130,6 +130,8 @@
         }, 1500);
       }
 
+      el.querySelector('.joinCode .text').innerText = viewerState.joinCode;
+
       const total = [1, 2, 3, 4, 5, 6, 7, 8].reduce((acc, index) => {
         const score = Number(Reflect.get(viewerState, `answer${index}Score`));
         return score && !isNaN(score) && score > 0 ? acc + score : acc;

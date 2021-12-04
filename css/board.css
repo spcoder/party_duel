@@ -48,7 +48,7 @@
 
 .footer {
   display: grid;
-  grid-template-columns: repeat(2, 33%);
+  grid-template-columns: repeat(3, 1fr);
   grid-column-gap: 1vmin;
   justify-content: space-between;
 }
@@ -159,12 +159,10 @@
   text-align: center;
 }
 
-.footer > .cell.joinCode,
 .footer > .cell.editSwitch {
   display: none;
 }
 
-.host .footer > .cell.joinCode,
 .host .footer > .cell.editSwitch {
   display: grid;
 }

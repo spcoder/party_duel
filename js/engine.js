@@ -75,10 +75,6 @@ function useEngine(elementId, object) {
     },
     nav: function(hash) {
       location.hash = hash.startsWith('#') ? hash : '#' + hash;
-    },
-    setNav: function(key, value, hash) {
-      Reflect.set(this.state, key, value);
-      this.nav(hash);
     }
   };
   const app = { ...engine, ...object };
