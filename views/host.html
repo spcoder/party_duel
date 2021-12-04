@@ -1,4 +1,5 @@
-<template id="boardView">
+<template id="hostView">
+  <div class="progress">Loading, please wait&hellip;</div>
   <div class="host content">
     <div class="ratio">
       <div class="container">
@@ -110,7 +111,7 @@
 
 <script>
   app.addView({
-    templateId: 'boardView',
+    templateId: 'hostView',
     created: function(el) {
       const EMPTY_CELL = '';
       const globalState = this.state;
@@ -267,11 +268,11 @@
 
       class Machine {
 
-        render(state) {
+        render(stateInstance) {
           // update the content class
           const content = el.querySelector('.content');
-          Array.from(content.classList).filter(cls => !['content', 'host', 'hide'].includes(cls)).forEach(cls => content.classList.remove(cls));
-          content.classList.add(state.contentClass());
+          Array.from(content.classList).filter(cls => !['content', 'host', 'hide', 'loaded'].includes(cls)).forEach(cls => content.classList.remove(cls));
+          content.classList.add(stateInstance.contentClass());
 
           // set block answer, score, visibility, and handlers
           const blocks = Array.from(el.querySelectorAll('.block'));
@@ -282,9 +283,9 @@
             block.querySelector('.answer .text').innerText = text || EMPTY_CELL;
             block.querySelector('.score .text').innerText = (score ?? 0) === 0 ? EMPTY_CELL : score;
             isVisible ? block.classList.add('shown') : block.classList.remove('shown');
-            if (typeof state.onBlockClick === 'function') {
+            if (typeof stateInstance.onBlockClick === 'function') {
               block.onclick = () => {
-                Promise.resolve(state.onBlockClick(block, index, blocks)).then(nextState => {
+                Promise.resolve(stateInstance.onBlockClick(block, index, blocks)).then(nextState => {
                   if (nextState) {
                     this.render(nextState);
                   }
@@ -299,11 +300,11 @@
           const buttonSelectors = ['.strikes', '.joinCode', '.editSwitch', '.total'];
           Array(4).fill(0).forEach((_, index) => {
             const button = el.querySelector(buttonSelectors[index]);
-            button.querySelector('.text').innerText = state.buttonTextFor(index);
+            button.querySelector('.text').innerText = stateInstance.buttonTextFor(index);
             button.onclick = () => {
-              const handler = Reflect.get(state, `onButton${index}`);
+              const handler = Reflect.get(stateInstance, `onButton${index}`);
               if (handler) {
-                Promise.resolve(handler.apply(state, [])).then(nextState => {
+                Promise.resolve(handler.apply(stateInstance, [])).then(nextState => {
                   if (nextState) {
                     this.render(nextState);
                   }
@@ -316,6 +317,11 @@
       }
 
       new Machine().render(new DefaultState());
+
+      setTimeout(() => {
+        el.querySelector('.progress').remove();
+        el.querySelector('.content').classList.add('loaded');
+      }, 1000);
     },
   });
 </script>

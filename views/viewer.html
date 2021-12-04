@@ -1,4 +1,5 @@
 <template id="viewerView">
+  <div class="progress">Loading, please wait&hellip;</div>
   <div class="content" data-initial="yes">
     <div class="ratio">
       <div class="container">
@@ -111,8 +112,12 @@
 <script>
   app.addView({
     templateId: 'viewerView',
-    created: function() {
+    created: function(el) {
       networking.publish(this.state._joinCode, 'canhazit?');
+      setTimeout(() => {
+        el.querySelector('.progress').remove();
+        el.querySelector('.content').classList.add('loaded');
+      }, 1000);
     },
     afterStateChange: function(el, prop, oldValue, newValue, state) {
       const firstChange = el.querySelector('.content').dataset.initial === 'yes';

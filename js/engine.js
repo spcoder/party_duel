@@ -33,6 +33,7 @@ function useEngine(elementId, object) {
       const route = Reflect.get(this.routes, routeKey) ?? Reflect.get(this.routes, this.routeNotFound);
       this.include(route.file, route.templateId).then(() => {
         if (container.dataset.templateId !== route.templateId) {
+          container.style.display = 'none';
           const wrapper = document.createElement('div');
           const shadowRoot = wrapper.attachShadow({ mode: 'open' });
           const viewFragment = document.getElementById(route.templateId).content;
@@ -47,6 +48,7 @@ function useEngine(elementId, object) {
           container.replaceChildren(wrapper);
           applyHandler(this, views.get(route.templateId), 'mounted', shadowRoot, route.context);
           container.dataset.templateId = route.templateId;
+          setTimeout(() => container.style.display = 'block', 100);
         }
       });
     },
