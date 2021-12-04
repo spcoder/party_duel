@@ -9,6 +9,7 @@ function useEngine(elementId, object) {
     routeNotFound: 'index',
     state: {},
     addView: handler => views.set(handler.templateId, handler),
+    nav: hash => location.hash = hash.startsWith('#') ? hash : '#' + hash,
     include: (file, templateId) => {
       if (document.getElementById(templateId)) {
         return Promise.resolve();
@@ -55,16 +56,15 @@ function useEngine(elementId, object) {
     start: function() {
       window.addEventListener('hashchange', () => this.render());
       const set = (target, prop, newValue) => {
-
-        const routeKey = location.hash.replaceAll('#', '').trim() || this.routeDefault;
-        const route = Reflect.get(this.routes, routeKey) ?? Reflect.get(this.routes, this.routeNotFound);
-
-        if (Reflect.get(target, prop) !== newValue) {
+        const oldValue = Reflect.get(target, prop);
+        if (oldValue !== newValue) {
           const ok = Reflect.set(target, prop, newValue);
           if (ok) {
+            const routeKey = location.hash.replaceAll('#', '').trim() || this.routeDefault;
+            const route = Reflect.get(this.routes, routeKey) ?? Reflect.get(this.routes, this.routeNotFound);
             const shadowRoot = container.firstElementChild?.shadowRoot;
-            applyHandler(this, this, 'afterStateChange', prop, Reflect.get(target, prop), newValue, this.state);
-            applyHandler(this, views.get(route.templateId), 'afterStateChange', shadowRoot, prop, Reflect.get(target, prop), newValue, this.state);
+            applyHandler(this, this, 'afterStateChange', prop, oldValue, newValue, this.state);
+            applyHandler(this, views.get(route.templateId), 'afterStateChange', shadowRoot, prop, oldValue, newValue, this.state);
             this.render();
           }
           return ok;
@@ -74,9 +74,6 @@ function useEngine(elementId, object) {
       this.state = new Proxy({ ...this.state, _engineStarted: false }, { set });
       this.state._engineStarted = true; // turn the key
       applyHandler(this, this, 'afterStart', this.state);
-    },
-    nav: function(hash) {
-      location.hash = hash.startsWith('#') ? hash : '#' + hash;
     }
   };
   const app = { ...engine, ...object };
