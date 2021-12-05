@@ -200,7 +200,7 @@
         }
 
         onButton1() {
-          if (globalState.strikes < 3) {
+          if (globalState.strikes < 5) {
             globalState.strikes++;
             return new Promise(resolve => {
               const bigStrike = el.querySelector('.bigStrike');

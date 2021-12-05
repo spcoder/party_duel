@@ -102,6 +102,10 @@
   overflow: hidden;
 }
 
+.empty > .cell {
+  opacity: 0.1;
+}
+
 .block > .score {
   justify-items: center;
 }

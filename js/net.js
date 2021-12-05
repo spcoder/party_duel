@@ -40,6 +40,7 @@ const publishState = function(channel, state) {
       const isVisible = Reflect.get(state, `answer${index}Visible`) === true;
       Reflect.set(acc, `answer${index}Text`, isVisible && answerText ? answerText : null);
       Reflect.set(acc, `answer${index}Score`, isVisible && answerText ? answerScore : null);
+      Reflect.set(acc, `answer${index}Empty`, !answerText);
       return acc;
     }, {})
   };
